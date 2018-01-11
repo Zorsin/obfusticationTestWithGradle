@@ -1,8 +1,12 @@
--keepparameternames
+#-libraryjars 'C:\Program Files\Java\jdk1.8.0_102\jre\lib\rt.jar'
+#-libraryjars 'C:\Program Files\Java\jdk1.8.0_102\jre\lib\javaws.jar'
+#-libraryjars 'C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\jfxrt.jar'
+
+#-keepparameternames
 -renamesourcefileattribute SourceFile
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
--keep class com.myfiles.api.** { *; }
--keep class com.myfiles.internal.json.** { *; }
+#-keep class com.myfiles.api.** { *; }
+#-keep class com.myfiles.internal.json.** { *; }
 -keepclassmembernames class * { java.lang.Class class$(java.lang.String); java.lang.Class class$(java.lang.String, boolean); }
 -optimizations !code/allocation/variable
 

@@ -9,7 +9,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 
-def javaName = 'itssomething'
+def javaName = archivesBaseName + '-java'
 def fullJavaName = archivesBaseName + '-full'
 def mainClassName = 'obfusticationUI.MainUI'
 
@@ -30,7 +30,7 @@ dependencies {
 }
 
 jar {
-    baseName = javaName;
+    baseName = javaName
     manifest {
         attributes "Implementation-Title": javaName
         attributes "Implementation-Version": version
@@ -63,29 +63,31 @@ buildscript {
 }
 
 
-task proguard(type: ProGuardTask, dependsOn: 'obfuscatedJar') {
+task proguard(type: ProGuardTask, dependsOn: 'fullJavaJar') {
     configuration '/proguard.txt'
 
     injars "$buildDir/libs/${fullJavaName}-${version}.jar"
-    outjars "$buildDir/libs/${javaName}-${version}.jar"
+    outjars "$buildDir/libs/${javaName}-${version}-done.jar"
 
     libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
-    libraryjars configurations.compile.find { it.name.startsWith("gson") }
-    libraryjars configurations.compile.find { it.name.startsWith("slf4j-api") }
+    libraryjars "${System.getProperty('java.home')}/lib/javaws.jar"
+    libraryjars "${System.getProperty('java.home')}/lib/ext/jfxrt.jar"
+//    libraryjars configurations.compile.find { it.name.startsWith("gson") }
+//    libraryjars configurations.compile.find { it.name.startsWith("slf4j-api") }
 }
 
 task obfuscate(dependsOn: tasks.withType(ProGuardTask)) << {}
 
 install.dependsOn(obfuscate)
 
-install {
-    repositories.mavenInstaller {
-        addFilter(javaName) { artifact, file -> artifact.name.endsWith(javaName) }
-        pom(javaName).whenConfigured {
-            p ->
-                p.dependencies = p.dependencies.findAll {
-                    dep -> dep.artifactId != "junit"
-                }
-        }
-    }
-}
+//install {
+//    repositories.mavenInstaller {
+//        addFilter(javaName) { artifact, file -> artifact.name.endsWith(javaName) }
+//        pom(javaName).whenConfigured {
+//            p ->
+//                p.dependencies = p.dependencies.findAll {
+//                    dep -> dep.artifactId != "junit"
+//                }
+//        }
+//    }
+//}
